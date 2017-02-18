@@ -1,0 +1,21 @@
+{
+  "name": "dota2-status",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "dota2-gsi": "^1.0.1",
+    "socket.io": "^1.7.3",
+    "socket.io-client": "^1.7.3",
+    "strong-pubsub": "^0.2.0",
+    "strong-pubsub-mqtt": "^0.1.0",
+    "strong-pubsub-redis": "^0.1.1"
+  }
+}
+

@@ -1,0 +1,189 @@
+<html>
+<head>
+  <link rel="stylesheet" href="http://institut-de-genomique.github.io/Ultimate-DataTable/js/bootstrap/css/bootstrap-3.3.4.min.css">
+  <link rel="stylesheet" href="http://institut-de-genomique.github.io/Ultimate-DataTable/js/font-awesome/css/font-awesome.min.css">
+  <link rel="stylesheet" href="http://institut-de-genomique.github.io/Ultimate-DataTable/css/ultimate-datatable-3.3.1-SNAPSHOT.css">
+  <script src="http://institut-de-genomique.github.io/Ultimate-DataTable/js/jquery/jquery_1.11.1.min.js" type="text/javascript" charset="utf-8"></script>
+  <script src="http://institut-de-genomique.github.io/Ultimate-DataTable/js/bootstrap/js/bootstrap-3.3.4.min.js" type="text/javascript" charset="utf-8"></script>
+  <script src="http://institut-de-genomique.github.io/Ultimate-DataTable/js/angular-js/angular-1.3.16.min.js" type="text/javascript" charset="utf-8"></script>
+  <script src="http://institut-de-genomique.github.io/Ultimate-DataTable/js/momentjs.js" type="text/javascript" charset="utf-8"></script>
+  <script src="http://institut-de-genomique.github.io/Ultimate-DataTable/js/ultimate-datatable-3.3.1-SNAPSHOT.js" type="text/javascript" charset="utf-8"></script>
+  <script src="https://cdn.socket.io/socket.io-1.2.0.js"></script>
+  <script src="http://code.jquery.com/jquery-1.11.1.js"></script>
+</head>
+
+<body ng-app="ngAppDemo">
+ <div class="container-fluid">
+    <div class="row">
+        <h1 align=center>Dota 2 Party Stats</h1><br>
+        <div ng-controller="ngAppDemoController">
+            <div class="col-md-12 col-lg-12" ultimate-datatable="datatable">
+            </div>
+        </div>
+    </div>
+ </div>
+</body>
+
+<script>
+ const partyId = '826df0d0';
+
+  var socket = io();
+
+  let tableObject = null;
+  let globalTableData = [];
+  let playerState = [];
+
+  socket.on(partyId, function(msg){
+    let data = JSON.parse(msg);
+    let playerToken = data.playerToken;
+    let state = data.payload.gamestate;
+    playerState[state.player.name] = state;
+
+
+    let updatedData = {
+        "username": state.player.name,
+        "hero": state.hero.name,
+        "kills": state.player.kills,
+        "deaths": state.player.deaths,
+        "assists": state.player.assists,
+        "lasthits": state.player.last_hits,
+        "denies": state.player.denies,
+        "gpm": state.player.gpm,
+        "xpm": state.player.xpm,
+        "denies": state.player.denies
+      };
+
+      // find the old row
+
+      let found = false;
+      for(i = 0; i < globalTableData.length; i++)
+      {
+        if(globalTableData[i].username == updatedData.username)
+        {
+          globalTableData[i] = updatedData;
+          found = true;
+          break;
+        }
+      }
+
+      if(!found)
+      {
+        globalTableData.push(updatedData);
+      }
+
+
+      //tableObject.setData(updatedData);
+
+
+
+  });
+</script>
+
+<script>
+angular.module('ngAppDemo', ['ultimateDataTableServices']).controller('ngAppDemoController', ['$scope','datatable',function($scope,datatable) {
+
+  //Simple example of configuration
+      var datatableConfig = {
+          "name":"rankings",
+          "columns":[
+              {
+                  "header":"Username",
+                  "property":"username",
+                  "order":true,
+                  "type":"text",
+                  "edit":false
+              },
+              {
+                  "header":"Hero",
+                  "property":"hero",
+                  "order":true,
+                  "type":"text",
+                  "edit":false
+              },
+              {
+                  "header":"Kills",
+                  "property":"kills",
+                  "order":true,
+                  "type":"number",
+                  "edit":false
+              },
+              {
+                  "header":"Deaths",
+                  "property":"deaths",
+                  "order":true,
+                  "type":"number",
+                  "edit":false
+              },
+              {
+                  "header":"Assists",
+                  "property":"assists",
+                  "order":true,
+                  "type":"number",
+                  "edit":false
+              },
+              {
+                  "header":"LH",
+                  "property":"lasthits",
+                  "order":true,
+                  "type":"number",
+                  "edit":false
+              },
+              {
+                  "header":"DN",
+                  "property":"denies",
+                  "order":true,
+                  "type":"number",
+                  "edit":false
+              },
+              {
+                  "header":"GPM",
+                  "property":"gpm",
+                  "order":true,
+                  "type":"number",
+                  "edit":false
+              },
+              {
+                  "header":"XPM",
+                  "property":"xpm",
+                  "order":true,
+                  "type":"number",
+                  "edit":false
+              }
+          ],
+          "edit":{
+              "active":false,
+              "columnMode":true
+          },
+          "pagination":{
+            mode:'local'
+          },
+          "order":{
+              "mode":'local'
+          },
+          "remove":{
+              "active":false,
+              "mode":'local'
+          },
+          "extraHeaders":{
+            number:0,//Number of extra headers
+            list:{},//If dynamic:false
+            dynamic:true //If dynamic:true, the headers will be auto generated
+          }
+      };
+
+
+      //Init the datatable with his configuration
+      $scope.datatable = datatable(datatableConfig);
+      //Set the data to the datatable
+      $scope.datatable.setData(globalTableData);
+
+      setInterval( function () {
+        $scope.datatable.setData(globalTableData);
+      }, 1000 );
+
+      tableObject = $scope.datatable;
+
+}]);
+</script>
+</html>
+
