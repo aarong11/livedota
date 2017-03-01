@@ -1,5 +1,5 @@
 {
-  "name": "dota2-status",
+  "name": "livedota",
   "version": "1.0.0",
   "description": "",
   "main": "server.js",
@@ -10,12 +10,8 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "dota2-gsi": "^1.0.1",
+    "dota2-gsi": "github:aarong11/dota2-gsi",
     "socket.io": "^1.7.3",
-    "socket.io-client": "^1.7.3",
-    "strong-pubsub": "^0.2.0",
-    "strong-pubsub-mqtt": "^0.1.0",
-    "strong-pubsub-redis": "^0.1.1"
+    "socket.io-client": "^1.7.3"
   }
 }
-

@@ -1,9 +1,12 @@
 const remoteEmitterPort = 3000;
-const host = "34.192.207.11";
+const host = "gsi.dota.watch";
+const listenIp = "172.31.7.198";
+
 var d2gsi = require('dota2-gsi');
 var socket = require('socket.io-client')('http://' + host + ':' + remoteEmitterPort);
 
 var server = new d2gsi({
+    ip: listenIp,
     port: 443
 });
 
@@ -27,10 +30,10 @@ server.events.on('newclient', function(client) {
 
 		for(i = 0; i < keys.length; i++)
 		{
-	
+
 			console.log(client.gamestate.player.team2[keys[i]]);
 
-	
+
         		let payload = {
          			"partyId" : data.partyId,
          			"playerToken": client.gamestate.player.team2[keys[i]].name,
@@ -54,10 +57,10 @@ server.events.on('newclient', function(client) {
 		keys = Object.keys(radiantPlayers);
 		for(i = 0; i < keys.length; i++)
 		{
-	
+
 			console.log(client.gamestate.player.team3[keys[i]]);
 
-	
+
         		let payload = {
          			"partyId" : data.partyId,
          			"playerToken": client.gamestate.player.team3[keys[i]].name,
@@ -94,4 +97,3 @@ server.events.on('newclient', function(client) {
       });
 
 });
-
